@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Radar — 市场异动</title>
+<script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
+<style>
+:root {
+  --bg: #f5f5f7;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.06);
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary: #aeaeb2;
+  --accent: #0071e3;
+  --red: #ff3b30;
+  --orange: #ff9500;
+  --yellow: #ffcc00;
+  --green: #34c759;
+  --purple: #af52de;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
+  --radius: 14px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  position: sticky; top: 0; z-index: 100;
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.header .meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.summary-bar {
+  display: flex;
+  gap: 12px;
+  padding: 20px 40px;
+  flex-wrap: wrap;
+}
+.summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  min-width: 130px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.summary-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.summary-card .number { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+.summary-card .label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+.critical .number { color: var(--red); }
+.high .number { color: var(--orange); }
+.medium .number { color: #e6a700; }
+.low .number { color: var(--green); }
+.total .number { color: var(--accent); }
+.excluded .number { color: var(--text-tertiary); }
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 0 40px 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.chart-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.chart-panel h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.full-width { grid-column: 1 / -1; }
+
+.game-table-wrap {
+  grid-column: 1 / -1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.game-table-wrap > h3 {
+  font-size: 16px; font-weight: 700; margin-bottom: 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.game-table-wrap > h3 span { font-size: 12px; color: var(--text-tertiary); font-weight: 400; }
+
+.filter-bar {
+  display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;
+}
+.filter-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+.search-box {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  width: 280px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.12); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left; padding: 10px 12px;
+  color: var(--text-tertiary); font-weight: 600; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+th:hover { color: var(--accent); }
+th.sorted-asc::after { content: ' ▲'; color: var(--accent); }
+th.sorted-desc::after { content: ' ▼'; color: var(--accent); }
+
+td { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.03); vertical-align: middle; }
+tr:hover td { background: rgba(0,113,227,0.02); }
+
+.priority-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+}
+.priority-CRITICAL { background: rgba(255,59,48,0.1); color: var(--red); }
+.priority-HIGH { background: rgba(255,149,0,0.1); color: var(--orange); }
+.priority-MEDIUM { background: rgba(255,204,0,0.12); color: #b38600; }
+.priority-LOW { background: rgba(52,199,89,0.1); color: #28a745; }
+
+.freshness-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 600; margin-left: 6px;
+}
+.fresh-launch { background: rgba(255,59,48,0.08); color: var(--red); }
+.fresh-new { background: rgba(0,113,227,0.08); color: var(--accent); }
+.fresh-recent { background: rgba(175,82,222,0.08); color: var(--purple); }
+.fresh-evergreen { background: rgba(142,142,147,0.1); color: var(--text-secondary); }
+.fresh-upcoming { background: rgba(255,149,0,0.08); color: var(--orange); }
+
+.score-bar { display: inline-flex; align-items: center; gap: 8px; }
+.score-bar .bar { width: 60px; height: 5px; background: rgba(0,0,0,0.06); border-radius: 3px; overflow: hidden; }
+.score-bar .bar-fill { height: 100%; border-radius: 3px; }
+
+.signal-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.signal-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 11px; background: rgba(0,113,227,0.06); color: var(--accent);
+}
+
+.game-name { font-weight: 600; color: var(--text-primary); }
+.game-dev { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+.ea-badge {
+  display: inline-block; padding: 2px 6px; border-radius: 4px;
+  font-size: 10px; font-weight: 700;
+  background: rgba(175,82,222,0.08); color: var(--purple);
+  margin-left: 6px;
+}
+
+.expand-row td {
+  padding: 16px 20px; background: var(--bg); border: none;
+}
+.expand-content {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.signal-detail {
+  background: var(--card); padding: 14px; border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.signal-detail h4 { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.action-text {
+  padding: 14px; background: var(--card); border-radius: 10px;
+  border-left: 3px solid var(--accent); font-size: 13px;
+  line-height: 1.8; white-space: pre-wrap; grid-column: 1 / -1;
+}
+
+@media (max-width: 1200px) { .main-content { grid-template-columns: 1fr; } }
+@media (max-width: 768px) {
+  .header, .summary-bar, .main-content { padding-left: 16px; padding-right: 16px; }
+  .search-box { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎮 Game Radar — 市场异动监测</h1>
+  <div class="meta">最后扫描: 2026-04-14 09:59 UTC &nbsp;·&nbsp; 聚焦新品爆发 & 老游戏翻红</div>
+</div>
+
+<div class="summary-bar">
+  <div class="summary-card total"><div class="number">45</div><div class="label">扫描</div></div>
+  <div class="summary-card critical"><div class="number">5</div><div class="label">立即接触</div></div>
+  <div class="summary-card high"><div class="number">6</div><div class="label">优先关注</div></div>
+  <div class="summary-card medium"><div class="number">7</div><div class="label">观察列表</div></div>
+  <div class="summary-card low"><div class="number">2</div><div class="label">低优先级</div></div>
+  <div class="summary-card excluded"><div class="number">25</div><div class="label">已过滤</div></div>
+</div>
+
+<div class="main-content">
+  <div class="chart-panel"><h3>PCU vs 信号评分</h3><div id="scatterChart"></div></div>
+  <div class="chart-panel"><h3>信号分布</h3><div id="distributionChart"></div></div>
+
+  <div class="game-table-wrap">
+    <h3>🎯 市场异动列表 <span>点击行展开详情 · 点击表头排序</span></h3>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterGames('all', this)">全部</button>
+      <button class="filter-btn" onclick="filterGames('CRITICAL', this)">🔴 CRITICAL</button>
+      <button class="filter-btn" onclick="filterGames('HIGH', this)">🟠 HIGH</button>
+      <button class="filter-btn" onclick="filterGames('MEDIUM', this)">🟡 MEDIUM</button>
+      <button class="filter-btn" onclick="filterGames('LOW', this)">🟢 LOW</button>
+      <input type="text" class="search-box" id="searchInput" placeholder="搜索游戏 / 开发商 / 品类..." oninput="searchGames(this.value)">
+    </div>
+    <table id="gameTable">
+      <thead><tr>
+        <th data-sort="priority" style="width:90px">优先级</th>
+        <th data-sort="name">游戏</th>
+        <th data-sort="score" style="width:120px">评分</th>
+        <th data-sort="pcu" style="width:100px">PCU</th>
+        <th data-sort="twitch" style="width:110px">Twitch</th>
+        <th data-sort="review" style="width:90px">好评率</th>
+        <th data-sort="price" style="width:70px">价格</th>
+        <th style="width:180px">信号</th>
+      </tr></thead>
+      <tbody id="gameTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const allGames = [{"appid": 3041230, "name": "Windrose", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "launch_week", "description": "🔥 首发周 (发布0天)", "value": 0, "threshold": 7, "strength": "STRONG", "weight": 30}, {"source": "steam", "type": "pcu_breakout", "description": "PCU爆发: 21,270", "value": 21270, "threshold": 20000, "strength": "STRONG", "weight": 35}, {"source": "steam", "type": "review_emerging", "description": "口碑发酵: 92% (97条)", "value": 91.75257731958763, "threshold": 90, "strength": "WEAK", "weight": 6}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Early Access", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 42,429观众", "value": 42429, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 500频道", "value": 500, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(25种)", "value": 25, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 100, "priority": "CRITICAL", "action": "🔴 立即主动接触 — 建议48h内完成初步立案\n  🔥 首发周热度窗口 — 关注首周留存和口碑走向\n  📌 Early Access — 关注开发节奏", "evaluated_at": "2026-04-14T10:07:08.751523", "snapshot": {"pcu": 21270, "current_players": 21270, "review_score": 91.75257731958763, "total_reviews": 97, "owners_estimate": "N/A", "price": "$26.99", "twitch_viewers": 42429, "twitch_channels": 500, "genres": ["Action", "Adventure", "RPG", "Early Access"], "developers": ["Kraken Express"], "ea": true, "release_date": "Apr 14, 2026", "freshness": "🔥 首周", "days_since_release": 0}}, {"appid": 3321460, "name": "Crimson Desert", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "new_release", "description": "🆕 新品 (发布26天)", "value": 26, "threshold": 30, "strength": "MODERATE", "weight": 20}, {"source": "steam", "type": "pcu_breakout", "description": "PCU爆发: 79,369", "value": 79369, "threshold": 20000, "strength": "STRONG", "weight": 35}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 7,318观众", "value": 7318, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 197频道", "value": 197, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(20种)", "value": 20, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 94, "priority": "CRITICAL", "action": "🔴 立即主动接触 — 建议48h内完成初步立案", "evaluated_at": "2026-04-14T10:07:08.752665", "snapshot": {"pcu": 79369, "current_players": 79369, "review_score": 83.29466625113982, "total_reviews": 86637, "owners_estimate": "N/A", "price": "$69.99", "twitch_viewers": 7318, "twitch_channels": 197, "genres": ["Action", "Adventure"], "developers": ["Pearl Abyss"], "ea": false, "release_date": "Mar 19, 2026", "freshness": "🆕 新品", "days_since_release": 26}}, {"appid": 2868840, "name": "Slay the Spire 2", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "recent", "description": "📅 近期发布 (发布40天)", "value": 40, "threshold": 90, "strength": "WEAK", "weight": 8}, {"source": "steam", "type": "pcu_breakout", "description": "PCU爆发: 154,153", "value": 154153, "threshold": 20000, "strength": "STRONG", "weight": 35}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie, Early Access", "value": 2, "threshold": 1, "strength": "WEAK", "weight": 4}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 7,354观众", "value": 7354, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 143频道", "value": 143, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(11种)", "value": 11, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 86, "priority": "CRITICAL", "action": "🔴 立即主动接触 — 建议48h内完成初步立案\n  📌 Early Access — 关注开发节奏", "evaluated_at": "2026-04-14T10:07:08.753038", "snapshot": {"pcu": 154153, "current_players": 154153, "review_score": 81.28837909859807, "total_reviews": 103572, "owners_estimate": "N/A", "price": "$24.99", "twitch_viewers": 7354, "twitch_channels": 143, "genres": ["Indie", "Strategy", "Early Access"], "developers": ["Mega Crit"], "ea": true, "release_date": "Mar 5, 2026", "freshness": "📅 近期", "days_since_release": 40}}, {"appid": 1808500, "name": "ARC Raiders", "excluded": false, "exclude_reason": null, "signals": [{"source": "steam", "type": "pcu_breakout", "description": "PCU爆发: 35,312", "value": 35312, "threshold": 20000, "strength": "STRONG", "weight": 35}, {"source": "steam", "type": "review_strong", "description": "口碑优秀: 86% (274,905条)", "value": 85.92531965588113, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 13,961观众", "value": 13961, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 99频道", "value": 99, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(17种)", "value": 17, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 81, "priority": "CRITICAL", "action": "🔴 立即主动接触 — 建议48h内完成初步立案", "evaluated_at": "2026-04-14T10:07:08.753573", "snapshot": {"pcu": 35312, "current_players": 35312, "review_score": 85.92531965588113, "total_reviews": 274905, "owners_estimate": "N/A", "price": "$39.99", "twitch_viewers": 13961, "twitch_channels": 99, "genres": ["Action"], "developers": ["Embark Studios"], "ea": false, "release_date": "Oct 30, 2025", "freshness": "📊 已上线", "days_since_release": 166}}, {"appid": 3764200, "name": "Resident Evil Requiem", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "recent", "description": "📅 近期发布 (发布47天)", "value": 47, "threshold": 90, "strength": "WEAK", "weight": 8}, {"source": "steam", "type": "pcu_alert", "description": "PCU达标: 8,217", "value": 8217, "threshold": 5000, "strength": "MODERATE", "weight": 20}, {"source": "steam", "type": "review_strong", "description": "口碑优秀: 96% (93,538条)", "value": 96.14060595693729, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 5,652观众", "value": 5652, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 99频道", "value": 99, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(14种)", "value": 14, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 79, "priority": "CRITICAL", "action": "🔴 立即主动接触 — 建议48h内完成初步立案", "evaluated_at": "2026-04-14T10:07:08.754365", "snapshot": {"pcu": 8217, "current_players": 8217, "review_score": 96.14060595693729, "total_reviews": 93538, "owners_estimate": "N/A", "price": "$69.99", "twitch_viewers": 5652, "twitch_channels": 99, "genres": ["Action", "Adventure"], "developers": ["CAPCOM Co., Ltd."], "ea": false, "release_date": "Feb 26, 2026", "freshness": "📅 近期", "days_since_release": 47}}, {"appid": 3932890, "name": "Escape from Tarkov", "excluded": false, "exclude_reason": null, "signals": [{"source": "steam", "type": "pcu_alert", "description": "PCU达标: 10,905", "value": 10905, "threshold": 5000, "strength": "MODERATE", "weight": 20}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 6,043观众", "value": 6043, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 98频道", "value": 98, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(14种)", "value": 14, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 54, "priority": "HIGH", "action": "🟠 优先关注 — 建议本周内完成初步评估\n  ⚠️ 口碑偏低 — 关注差评核心原因", "evaluated_at": "2026-04-14T10:07:08.754130", "snapshot": {"pcu": 10905, "current_players": 10905, "review_score": 47.20065386187168, "total_reviews": 44046, "owners_estimate": "N/A", "price": "$49.99", "twitch_viewers": 6043, "twitch_channels": 98, "genres": ["Action", "Massively Multiplayer", "RPG", "Simulation"], "developers": ["Battlestate Games"], "ea": false, "release_date": "Nov 15, 2025", "freshness": "📊 已上线", "days_since_release": 150}}, {"appid": 2738490, "name": "Sol Cesto", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "launch_week", "description": "🔥 首发周 (发布4天)", "value": 4, "threshold": 7, "strength": "STRONG", "weight": 30}, {"source": "steam", "type": "review_strong", "description": "口碑优秀: 93% (2,691条)", "value": 92.97658862876254, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 51, "priority": "HIGH", "action": "🟠 优先关注 — 建议本周内完成初步评估\n  🔥 首发周热度窗口 — 关注首周留存和口碑走向", "evaluated_at": "2026-04-14T10:07:08.751979", "snapshot": {"pcu": 1308, "current_players": 1308, "review_score": 92.97658862876254, "total_reviews": 2691, "owners_estimate": "N/A", "price": "$9.37", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Indie", "Strategy"], "developers": ["Tambouille", "Géraud Zucchini", "Chariospirale"], "ea": false, "release_date": "Apr 10, 2026", "freshness": "🔥 首周", "days_since_release": 4}}, {"appid": 3357960, "name": "KuloNiku: Bowl Up!", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "launch_week", "description": "🔥 首发周 (发布7天)", "value": 7, "threshold": 7, "strength": "STRONG", "weight": 30}, {"source": "steam", "type": "review_strong", "description": "口碑优秀: 98% (682条)", "value": 97.65395894428153, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 51, "priority": "HIGH", "action": "🟠 优先关注 — 建议本周内完成初步评估\n  🔥 首发周热度窗口 — 关注首周留存和口碑走向", "evaluated_at": "2026-04-14T10:07:08.752319", "snapshot": {"pcu": 772, "current_players": 772, "review_score": 97.65395894428153, "total_reviews": 682, "owners_estimate": "N/A", "price": "$9.59", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Casual", "Indie", "Simulation"], "developers": ["Gambir Studio"], "ea": false, "release_date": "Apr 7, 2026", "freshness": "🔥 首周", "days_since_release": 7}}, {"appid": 3972320, "name": "Loot Loop", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "launch_week", "description": "🔥 首发周 (发布1天)", "value": 1, "threshold": 7, "strength": "STRONG", "weight": 30}, {"source": "steam", "type": "review_emerging", "description": "口碑发酵: 93% (91条)", "value": 93.4065934065934, "threshold": 90, "strength": "WEAK", "weight": 6}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 45, "priority": "HIGH", "action": "🟠 优先关注 — 建议本周内完成初步评估\n  🔥 首发周热度窗口 — 关注首周留存和口碑走向", "evaluated_at": "2026-04-14T10:07:08.751682", "snapshot": {"pcu": 417, "current_players": 417, "review_score": 93.4065934065934, "total_reviews": 91, "owners_estimate": "N/A", "price": "$4.24", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Casual", "Indie", "Simulation", "Strategy"], "developers": ["BitBrew"], "ea": false, "release_date": "Apr 13, 2026", "freshness": "🔥 首周", "days_since_release": 1}}, {"appid": 2426530, "name": "Nova Roma", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "new_release", "description": "🆕 新品 (发布19天)", "value": 19, "threshold": 30, "strength": "MODERATE", "weight": 20}, {"source": "steam", "type": "review_strong", "description": "口碑优秀: 95% (1,255条)", "value": 95.2988047808765, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Early Access", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 41, "priority": "HIGH", "action": "🟠 优先关注 — 建议本周内完成初步评估\n  📌 Early Access — 关注开发节奏", "evaluated_at": "2026-04-14T10:07:08.752543", "snapshot": {"pcu": 437, "current_players": 437, "review_score": 95.2988047808765, "total_reviews": 1255, "owners_estimate": "N/A", "price": "$29.99", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Simulation", "Strategy", "Early Access"], "developers": ["Lion Shield"], "ea": true, "release_date": "Mar 26, 2026", "freshness": "🆕 新品", "days_since_release": 19}}, {"appid": 3948120, "name": "Scritchy Scratchy", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "new_release", "description": "🆕 新品 (发布27天)", "value": 27, "threshold": 30, "strength": "MODERATE", "weight": 20}, {"source": "steam", "type": "review_strong", "description": "口碑优秀: 94% (6,619条)", "value": 93.97189907841064, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 41, "priority": "HIGH", "action": "🟠 优先关注 — 建议本周内完成初步评估", "evaluated_at": "2026-04-14T10:07:08.752783", "snapshot": {"pcu": 4018, "current_players": 4018, "review_score": 93.97189907841064, "total_reviews": 6619, "owners_estimate": "N/A", "price": "$6.99", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Casual", "Indie", "Simulation"], "developers": ["Lunch Money Games"], "ea": false, "release_date": "Mar 18, 2026", "freshness": "🆕 新品", "days_since_release": 27}}, {"appid": 3959890, "name": "Tap Tap Loot", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "launch_week", "description": "🔥 首发周 (发布1天)", "value": 1, "threshold": 7, "strength": "STRONG", "weight": 30}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 39, "priority": "MEDIUM", "action": "🟡 加入观察列表 — 持续追踪，等待更多信号\n  🔥 首发周热度窗口 — 关注首周留存和口碑走向", "evaluated_at": "2026-04-14T10:07:08.751857", "snapshot": {"pcu": 2978, "current_players": 2978, "review_score": 82.3076923076923, "total_reviews": 130, "owners_estimate": "N/A", "price": "$4.89", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Casual", "Indie", "Massively Multiplayer", "RPG"], "developers": ["Turtle Knight Games"], "ea": false, "release_date": "Apr 13, 2026", "freshness": "🔥 首周", "days_since_release": 1}}, {"appid": 1315180, "name": "Spark in the Dark", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "launch_week", "description": "🔥 首发周 (发布7天)", "value": 7, "threshold": 7, "strength": "STRONG", "weight": 30}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie, Early Access", "value": 2, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 39, "priority": "MEDIUM", "action": "🟡 加入观察列表 — 持续追踪，等待更多信号\n  🔥 首发周热度窗口 — 关注首周留存和口碑走向\n  📌 Early Access — 关注开发节奏", "evaluated_at": "2026-04-14T10:07:08.752205", "snapshot": {"pcu": 331, "current_players": 331, "review_score": 82.77634961439588, "total_reviews": 389, "owners_estimate": "N/A", "price": "$15.29", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Action", "Adventure", "Indie", "RPG", "Early Access"], "developers": ["Stellar Fish"], "ea": true, "release_date": "Apr 7, 2026", "freshness": "🔥 首周", "days_since_release": 7}}, {"appid": 1912410, "name": "Minecraft Dungeons II", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "upcoming", "description": "⏳ 即将上线 — 关注预热信号", "value": -1, "threshold": 0, "strength": "MODERATE", "weight": 15}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 30,208观众", "value": 30208, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 98频道", "value": 98, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(11种)", "value": 11, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 39, "priority": "MEDIUM", "action": "🟡 加入观察列表 — 持续追踪，等待更多信号", "evaluated_at": "2026-04-14T10:07:08.753412", "snapshot": {"pcu": 0, "current_players": 0, "review_score": 0, "total_reviews": 0, "owners_estimate": "N/A", "price": "N/A", "twitch_viewers": 30208, "twitch_channels": 98, "genres": ["Action", "Adventure", "RPG"], "developers": ["Mojang Studios", "Double Eleven"], "ea": false, "release_date": "2026", "freshness": "⏳ 即将上线", "days_since_release": -1}}, {"appid": 1422450, "name": "Deadlock", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "upcoming", "description": "⏳ 即将上线 — 关注预热信号", "value": -1, "threshold": 0, "strength": "MODERATE", "weight": 15}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 7,180观众", "value": 7180, "threshold": 3000, "strength": "WEAK", "weight": 8}, {"source": "twitch", "type": "channels_diverse", "description": "多主播在播: 195频道", "value": 195, "threshold": 50, "strength": "WEAK", "weight": 6}, {"source": "twitch", "type": "global_spread", "description": "多语言传播(15种)", "value": 15, "threshold": 5, "strength": "WEAK", "weight": 5}], "score": 39, "priority": "MEDIUM", "action": "🟡 加入观察列表 — 持续追踪，等待更多信号", "evaluated_at": "2026-04-14T10:07:08.753933", "snapshot": {"pcu": 0, "current_players": 0, "review_score": 0, "total_reviews": 0, "owners_estimate": "N/A", "price": "N/A", "twitch_viewers": 7180, "twitch_channels": 195, "genres": ["Action"], "developers": ["Valve"], "ea": false, "release_date": "To be announced", "freshness": "⏳ 即将上线", "days_since_release": -1}}, {"appid": 2794590, "name": "Scam Line", "excluded": false, "exclude_reason": null, "signals": [{"source": "steam", "type": "review_strong", "description": "口碑优秀: 87% (726条)", "value": 86.50137741046832, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie, Early Access", "value": 2, "threshold": 1, "strength": "WEAK", "weight": 4}, {"source": "twitch", "type": "twitch_active", "description": "Twitch在播: 5,043观众", "value": 5043, "threshold": 3000, "strength": "WEAK", "weight": 8}], "score": 39, "priority": "MEDIUM", "action": "🟡 加入观察列表 — 持续追踪，等待更多信号\n  📌 Early Access — 关注开发节奏", "evaluated_at": "2026-04-14T10:07:08.754575", "snapshot": {"pcu": 92, "current_players": 92, "review_score": 86.50137741046832, "total_reviews": 726, "owners_estimate": "N/A", "price": "$4.99", "twitch_viewers": 5043, "twitch_channels": 7, "genres": ["Indie", "Early Access"], "developers": ["RavenJm"], "ea": true, "release_date": "Jan 10, 2026", "freshness": "📊 已上线", "days_since_release": 94}}, {"appid": 3199360, "name": "Skull Horde", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "launch_week", "description": "🔥 首发周 (发布4天)", "value": 4, "threshold": 7, "strength": "STRONG", "weight": 30}], "score": 30, "priority": "MEDIUM", "action": "🟡 加入观察列表 — 持续追踪，等待更多信号\n  🔥 首发周热度窗口 — 关注首周留存和口碑走向", "evaluated_at": "2026-04-14T10:07:08.752090", "snapshot": {"pcu": 1361, "current_players": 1361, "review_score": 81.28342245989305, "total_reviews": 374, "owners_estimate": "N/A", "price": "$9.74", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Action", "Adventure", "Casual"], "developers": ["8BitSkull"], "ea": false, "release_date": "Apr 10, 2026", "freshness": "🔥 首周", "days_since_release": 4}}, {"appid": 3326230, "name": "Hozy", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "new_release", "description": "🆕 新品 (发布15天)", "value": 15, "threshold": 30, "strength": "MODERATE", "weight": 20}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 29, "priority": "MEDIUM", "action": "🟡 加入观察列表 — 持续追踪，等待更多信号", "evaluated_at": "2026-04-14T10:07:08.752429", "snapshot": {"pcu": 521, "current_players": 521, "review_score": 81.31030980192992, "total_reviews": 1969, "owners_estimate": "N/A", "price": "$14.99", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Casual", "Indie", "Simulation"], "developers": ["Come On Studio"], "ea": false, "release_date": "Mar 30, 2026", "freshness": "🆕 新品", "days_since_release": 15}}, {"appid": 4045750, "name": "Out of the Park Baseball 27", "excluded": false, "exclude_reason": null, "signals": [{"source": "freshness", "type": "recent", "description": "📅 近期发布 (发布32天)", "value": 32, "threshold": 90, "strength": "WEAK", "weight": 8}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 17, "priority": "LOW", "action": "🟢 低优先级 — 记录存档，下次扫描复查", "evaluated_at": "2026-04-14T10:07:08.752897", "snapshot": {"pcu": 581, "current_players": 581, "review_score": 78.21782178217822, "total_reviews": 202, "owners_estimate": "N/A", "price": "$49.99", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Indie", "Simulation", "Sports", "Strategy"], "developers": ["Out of the Park Developments"], "ea": false, "release_date": "Mar 13, 2026", "freshness": "📅 近期", "days_since_release": 32}}, {"appid": 2119830, "name": "MISERY", "excluded": false, "exclude_reason": null, "signals": [{"source": "steam", "type": "review_strong", "description": "口碑优秀: 85% (15,452条)", "value": 85.22521356458711, "threshold": 85, "strength": "MODERATE", "weight": 12}, {"source": "steam", "type": "priority_genre", "description": "热门品类: Indie", "value": 1, "threshold": 1, "strength": "WEAK", "weight": 4}], "score": 16, "priority": "LOW", "action": "🟢 低优先级 — 记录存档，下次扫描复查", "evaluated_at": "2026-04-14T10:07:08.753149", "snapshot": {"pcu": 368, "current_players": 368, "review_score": 85.22521356458711, "total_reviews": 15452, "owners_estimate": "N/A", "price": "$9.74", "twitch_viewers": 0, "twitch_channels": 0, "genres": ["Action", "Adventure", "Indie", "Massively Multiplayer", "Simulation"], "developers": ["Platypus Entertainment"], "ea": false, "release_date": "Oct 23, 2025", "freshness": "📊 已上线", "days_since_release": 173}}];
+let currentFilter = 'all', currentSearch = '', currentSort = {key:'score',dir:'desc'};
+
+function renderCharts() {
+  const pColors = {'CRITICAL':'#ff3b30','HIGH':'#ff9500','MEDIUM':'#e6a700','LOW':'#34c759'};
+  const scatterData = allGames.filter(g => !g.excluded && g.score > 0);
+  const traces = ['CRITICAL','HIGH','MEDIUM','LOW'].map(p => {
+    const f = scatterData.filter(d => d.priority === p);
+    return {
+      x: f.map(d => d.snapshot?.pcu || 1),
+      y: f.map(d => d.score),
+      text: f.map(d => `<b>${d.name}</b><br>PCU: ${(d.snapshot?.pcu||0).toLocaleString()}<br>Score: ${d.score}<br>Twitch: ${(d.snapshot?.twitch_viewers||0).toLocaleString()}<br>${d.snapshot?.freshness||''}`),
+      marker: {
+        size: f.map(d => Math.max(8, Math.min(45, Math.sqrt(d.snapshot?.twitch_viewers||0)/4))),
+        color: pColors[p], opacity: 0.75,
+        line: {color:'rgba(255,255,255,0.8)',width:1.5},
+      },
+      name: p, type:'scatter', mode:'markers',
+      hovertemplate: '%{text}<extra></extra>',
+    };
+  });
+  Plotly.newPlot('scatterChart', traces, {
+    paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+    margin:{l:50,r:20,t:10,b:50},
+    xaxis:{title:'PCU',color:'#86868b',gridcolor:'rgba(0,0,0,0.04)',type:'log',zeroline:false},
+    yaxis:{title:'评分',color:'#86868b',gridcolor:'rgba(0,0,0,0.04)',range:[0,105],zeroline:false},
+    showlegend:true,
+    legend:{x:0.01,y:0.99,bgcolor:'rgba(255,255,255,0.8)',font:{color:'#86868b',size:11}},
+    font:{family:'-apple-system,sans-serif'}, height:300,
+  }, {responsive:true, displayModeBar:false});
+
+  const pCounts = {};
+  scatterData.forEach(g => { pCounts[g.priority] = (pCounts[g.priority]||0)+1; });
+  const freshCounts = {};
+  scatterData.forEach(g => {
+    const f = g.snapshot?.freshness || '未知';
+    freshCounts[f] = (freshCounts[f]||0)+1;
+  });
+  const fLabels = Object.keys(freshCounts);
+  const fValues = Object.values(freshCounts);
+  Plotly.newPlot('distributionChart', [{
+    labels: fLabels, values: fValues, type:'pie', hole:0.5,
+    marker:{colors:fLabels.map(l => l.includes('首周')?'#ff3b30':l.includes('新品')?'#0071e3':l.includes('近期')?'#af52de':l.includes('翻红')?'#ff9500':'#86868b')},
+    textinfo:'value+label', textfont:{size:11,color:'#1d1d1f'},
+  }], {
+    paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+    margin:{l:20,r:20,t:10,b:20}, showlegend:false,
+    font:{family:'-apple-system,sans-serif'}, height:300,
+  }, {responsive:true, displayModeBar:false});
+}
+
+function renderTable() {
+  const tbody = document.getElementById('gameTableBody');
+  tbody.innerHTML = '';
+  let filtered = allGames.filter(g => !g.excluded && g.score > 0);
+  if (currentFilter !== 'all') filtered = filtered.filter(g => g.priority === currentFilter);
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    filtered = filtered.filter(g => {
+      return (g.name||'').toLowerCase().includes(q) ||
+        (g.snapshot?.developers||[]).join(' ').toLowerCase().includes(q) ||
+        (g.snapshot?.genres||[]).join(' ').toLowerCase().includes(q);
+    });
+  }
+  filtered.sort((a,b) => {
+    const k = currentSort.key;
+    let va, vb;
+    switch(k) {
+      case 'priority': const o={'CRITICAL':0,'HIGH':1,'MEDIUM':2,'LOW':3}; va=o[a.priority]??9; vb=o[b.priority]??9; break;
+      case 'name': va=(a.name||'').toLowerCase(); vb=(b.name||'').toLowerCase(); break;
+      case 'score': va=a.score||0; vb=b.score||0; break;
+      case 'pcu': va=a.snapshot?.pcu||0; vb=b.snapshot?.pcu||0; break;
+      case 'twitch': va=a.snapshot?.twitch_viewers||0; vb=b.snapshot?.twitch_viewers||0; break;
+      case 'review': va=a.snapshot?.review_score||0; vb=b.snapshot?.review_score||0; break;
+      default: va=a.score||0; vb=b.score||0;
+    }
+    if (typeof va==='string') return currentSort.dir==='asc'?va.localeCompare(vb):vb.localeCompare(va);
+    return currentSort.dir==='asc'?va-vb:vb-va;
+  });
+
+  filtered.forEach(game => {
+    const s = game.snapshot||{};
+    const pcu = s.pcu||0, twitch = s.twitch_viewers||0, review = s.review_score||0;
+    const totalReviews = s.total_reviews||0, score = game.score||0;
+    
+    let barColor = '#34c759';
+    if (score>=65) barColor='#ff3b30'; else if (score>=45) barColor='#ff9500'; else if (score>=25) barColor='#e6a700';
+    
+    const signalTags = (game.signals||[]).slice(0,3).map(sig =>
+      `<span class="signal-tag">${sig.type.replace(/_/g,' ')}</span>`
+    ).join('');
+    
+    const freshness = s.freshness||'';
+    let freshClass = 'fresh-new';
+    if (freshness.includes('首周')) freshClass='fresh-launch';
+    else if (freshness.includes('新品')) freshClass='fresh-new';
+    else if (freshness.includes('近期')) freshClass='fresh-recent';
+    else if (freshness.includes('翻红')) freshClass='fresh-evergreen';
+    else if (freshness.includes('即将')) freshClass='fresh-upcoming';
+    
+    const freshTag = freshness ? `<span class="freshness-tag ${freshClass}">${freshness}</span>` : '';
+    const eaBadge = s.ea ? '<span class="ea-badge">EA</span>' : '';
+    const devs = (s.developers||[]).join(', ') || '';
+    
+    const row = document.createElement('tr');
+    row.style.cursor = 'pointer';
+    row.onclick = () => toggleExpand(game, row);
+    row.innerHTML = `
+      <td><span class="priority-badge priority-${game.priority}">${game.priority}</span></td>
+      <td>
+        <div class="game-name">${game.name||'?'}${eaBadge}${freshTag}</div>
+        <div class="game-dev">${devs}</div>
+      </td>
+      <td><div class="score-bar"><span style="font-weight:700;min-width:28px">${score}</span><div class="bar"><div class="bar-fill" style="width:${score}%;background:${barColor}"></div></div></div></td>
+      <td style="font-weight:600;${pcu>=5000?'color:#ff9500;':''}">${pcu>0?pcu.toLocaleString():'-'}</td>
+      <td style="font-weight:600;${twitch>=10000?'color:#af52de;':''}">${twitch>0?twitch.toLocaleString():'-'}</td>
+      <td>${totalReviews>0?`<span style="color:${review>=85?'#34c759':review>=70?'#e6a700':'#ff3b30'}">${review.toFixed(0)}%</span><span style="color:#aeaeb2;font-size:11px"> (${totalReviews.toLocaleString()})</span>`:'-'}</td>
+      <td style="color:var(--text-secondary)">${s.price||'N/A'}</td>
+      <td><div class="signal-tags">${signalTags||'-'}</div></td>
+    `;
+    tbody.appendChild(row);
+  });
+  if (!filtered.length) {
+    const row = document.createElement('tr');
+    row.innerHTML = '<td colspan="8" style="text-align:center;color:var(--text-tertiary);padding:40px">暂无匹配结果</td>';
+    tbody.appendChild(row);
+  }
+}
+
+function toggleExpand(game, clickedRow) {
+  const existing = document.querySelector('.expand-row');
+  if (existing) { const was = existing.previousElementSibling===clickedRow; existing.remove(); if (was) return; }
+  const s = game.snapshot||{};
+  const signalHtml = (game.signals||[]).map(sig => `
+    <div style="display:flex;align-items:center;gap:8px;padding:4px 0">
+      <span style="width:8px;height:8px;border-radius:50%;background:${
+        sig.strength==='STRONG'?'#ff3b30':sig.strength==='MODERATE'?'#ff9500':'#e6a700'
+      };flex-shrink:0"></span>
+      <span style="flex:1;font-size:12px">${sig.description}</span>
+      <span style="color:var(--text-tertiary);font-size:11px">w:${sig.weight}</span>
+    </div>
+  `).join('');
+  const expandRow = document.createElement('tr');
+  expandRow.className = 'expand-row';
+  expandRow.innerHTML = `<td colspan="8"><div class="expand-content">
+    <div class="signal-detail"><h4>信号详情</h4>${signalHtml||'<span style="color:var(--text-tertiary)">暂无</span>'}</div>
+    <div class="signal-detail"><h4>游戏信息</h4><div style="font-size:12px;line-height:2">
+      <div>品类: ${(s.genres||[]).join(', ')||'N/A'}</div>
+      <div>发布: ${s.release_date||'N/A'} ${s.freshness||''}</div>
+      <div>拥有者: ${s.owners_estimate||'N/A'}</div>
+      <div>${game.appid?`<a href="https://store.steampowered.com/app/${game.appid}" target="_blank" style="color:var(--accent);text-decoration:none">Steam商店 ↗</a>`:'非Steam游戏'}</div>
+    </div></div>
+    <div class="action-text"><strong>行动建议</strong><br>${(game.action||'').replace(/\n/g,'<br>')}</div>
+  </div></td>`;
+  clickedRow.insertAdjacentElement('afterend', expandRow);
+}
+
+function filterGames(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+function searchGames(q) { currentSearch = q; renderTable(); }
+
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.sort;
+    if (currentSort.key===key) currentSort.dir = currentSort.dir==='desc'?'asc':'desc';
+    else currentSort = {key, dir:'desc'};
+    document.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc','sorted-desc'));
+    th.classList.add(currentSort.dir==='asc'?'sorted-asc':'sorted-desc');
+    renderTable();
+  });
+});
+
+renderCharts();
+renderTable();
+</script>
+</body>
+</html>

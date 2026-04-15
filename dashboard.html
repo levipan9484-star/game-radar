@@ -334,7 +334,7 @@ function renderCharts() {
   const traces = ['CRITICAL','HIGH','MEDIUM','LOW'].map(p => {
     const f = scatterData.filter(d => d.priority === p);
     return {
-      x: f.map(d => d.snapshot?.pcu || 1),
+      x: f.map(d => Math.max(1, d.snapshot?.pcu || 1)),
       y: f.map(d => d.score),
       text: f.map(d => `<b>${d.name}</b><br>PCU: ${(d.snapshot?.pcu||0).toLocaleString()}<br>Score: ${d.score}<br>Twitch: ${(d.snapshot?.twitch_viewers||0).toLocaleString()}<br>${d.snapshot?.freshness||''}`),
       marker: {
@@ -350,7 +350,7 @@ function renderCharts() {
     paper_bgcolor:'transparent', plot_bgcolor:'transparent',
     margin:{l:50,r:20,t:10,b:50},
     xaxis:{title:'PCU',color:'#86868b',gridcolor:'rgba(0,0,0,0.04)',type:'log',zeroline:false},
-    yaxis:{title:'评分',color:'#86868b',gridcolor:'rgba(0,0,0,0.04)',range:[0,105],zeroline:false},
+    yaxis:{title:'评分',color:'#86868b',gridcolor:'rgba(0,0,0,0.04)',zeroline:false},
     showlegend:true,
     legend:{x:0.01,y:0.99,bgcolor:'rgba(255,255,255,0.8)',font:{color:'#86868b',size:11}},
     font:{family:'-apple-system,sans-serif'}, height:300,

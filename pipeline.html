@@ -99,7 +99,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <span class="filter-sep">|</span>
   <span class="filter-label">状态</span>
   <button class="filter-btn active" data-group="status" onclick="setFilter('status','all',this)">全部</button>
-  <button class="filter-btn" data-group="status" onclick="setFilter('status','inbox',this)">📥 新发现 (5)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','watching',this)">👀 观察中 (53)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','contacting',this)">🤝 接触中 (0)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','deep_eval',this)">📋 深度评估 (6)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','archived',this)">📦 归档 (26)</button>
+  <button class="filter-btn" data-group="status" onclick="setFilter('status','inbox',this)">📥 新发现 (5)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','watching',this)">👀 观察中 (30)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','contacting',this)">🤝 已建联 (19)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','small_refresh',this)">🖊️小额刷新 (4)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','deep_eval',this)">📋 深度评估 (6)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','archived',this)">📦 归档 (26)</button>
   <span class="filter-sep">|</span>
   <span class="filter-label">来源</span>
   <button class="filter-btn active" data-group="source" onclick="setFilter('source','all',this)">全部</button>
@@ -180,7 +180,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
 <div class="column " style="--col-bg:#FFF3E0;--col-border:#FFA726" data-status="watching">
   <div class="column-header" onclick="toggleColumn(this)">
     <span class="column-title">👀 观察中</span>
-    <span class="column-count">53</span>
+    <span class="column-count">30</span>
     <span class="collapse-icon">▼</span>
   </div>
   <div class="column-body">
@@ -211,30 +211,6 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
 <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
-    <span class="card-title">Don't Starve Elsewhere</span>
-  </div>
-  <div class="card-company">Klei Entertainment · Venturelab John Polson</div>
-  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag source-tag">Triple-i 2026</span></div>
-  <div class="card-metrics"><span class="metric">👥 19,080</span><span class="metric">📊 #171</span></div>
-  <div class="card-release">📅 To be announced</div>
-  <div class="card-verdict">饥荒新作</div>
-  <div class="card-action">▶ Tencent owed</div>
-</div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
-    <span class="card-title">Solarpunk</span>
-  </div>
-  <div class="card-company">Cyberwave · Teddy</div>
-  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
-  <div class="card-metrics"><span class="metric">👥 67,492</span><span class="metric">📊 #21</span></div>
-  <div class="card-release">📅 Jun 8, 2026</div>
-  <div class="card-verdict">目前愿望单排名最高，26年5月发售，确实可以看看新版本，但是目前时间太近，似乎做不了什么</div>
-  <div class="card-action">▶ JP contacted</div>
-</div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Crop</span>
   </div>
   <div class="card-company">Carbonara</div>
@@ -256,45 +232,6 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">恶魔轮盘制作人新作，4人合作派对游戏，有爆款品相</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🔴高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
-    <span class="card-title">Tilki</span>
-  </div>
-  <div class="card-company">TILKI · Teddy</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info, wait for playable
-Conclusion: Need more info. Will send Bet...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🔴高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
-    <span class="card-title">Chronicles Medieval</span>
-  </div>
-  <div class="card-company">Raw Power Games · Lisa</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info, wait for playable
-Conclusion: Need more info. Excellent con...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🔴高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
-    <span class="card-title">Haunted Paws</span>
-  </div>
-  <div class="card-company">SneakyBox (Lazy Clock) · Teddy</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info, wait for playable
-Conclusion: Need more info. Strong organi...</div>
-  
-</div>
 <div class="card" data-source="triple_i_2026" data-priority="🟡中高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
@@ -306,191 +243,6 @@ Conclusion: Need more info. Strong organi...</div>
   <div class="card-release">📅 2026</div>
   
   <div class="card-action">▶ JP contacted in 2025</div>
-</div>
-<div class="card" data-source="triple_i_2026" data-priority="🟡中高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">SpaceCraft</span>
-  </div>
-  <div class="card-company">Shiro Games · Teddy</div>
-  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
-  <div class="card-metrics"><span class="metric">👥 44,853</span><span class="metric">📊 #89</span></div>
-  <div class="card-release">📅 May 20, 2026</div>
-  <div class="card-verdict">太空基建+星系探索+开飞船，整体scope较大，我们小额</div>
-  <div class="card-action">▶ - investee?</div>
-</div>
-<div class="card" data-source="triple_i_2026" data-priority="🟡中高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Valor Mortis</span>
-  </div>
-  <div class="card-company">One More Level · Areil</div>
-  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
-  <div class="card-metrics"><span class="metric">👥 24,649</span><span class="metric">📊 #75</span></div>
-  <div class="card-release">📅 2026</div>
-  <div class="card-verdict">第一人称魂like，愿望单top100等发售</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">One Shot Simon</span>
-  </div>
-  <div class="card-company">Edcorp · Teddy</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info, wait for playable
-Conclusion: Need more info. Wait for play...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Control 2</span>
-  </div>
-  <div class="card-company">Remedy · Lisa</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Others
-Conclusion: Others. TGIF Review 
-
-The art direction carries forward ...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Return to Moria 2</span>
-  </div>
-  <div class="card-company">North Beach · Justin</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Neutral, wait for playable
-Conclusion: Need more info. Focus on "Stranded D...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Stance</span>
-  </div>
-  <div class="card-company">Authorship Games · Justin</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Neutral, wait for playable
-Conclusion: Need more info. Wait for latest play...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">The Holdouts</span>
-  </div>
-  <div class="card-company">Ruckus · John Polson</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Need to participate in April pla...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Project Hex</span>
-  </div>
-  <div class="card-company">Lasting Light Studio · John Polson</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Worth tracking but not ready for...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Zero State Agent</span>
-  </div>
-  <div class="card-company">Fortress Games · John Polson</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Core gameplay and art style show...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Big Box</span>
-  </div>
-  <div class="card-company">Newtin · John Polson</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Tested on-site — felt mediocre.
-...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">cozy multiplayer</span>
-  </div>
-  <div class="card-company">Dragon Snacks · Justin</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Direction is challenging but tea...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Hello Kitty Island Adventure</span>
-  </div>
-  <div class="card-company">Sunblink · John Polson</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Low priority — only at PPT stage...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">The Hidden</span>
-  </div>
-  <div class="card-company">Cardboard Sword · Teddy</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Will provide a playable demo.
-
-T...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
-    <span class="card-title">Project World Model</span>
-  </div>
-  <div class="card-company">Alakazam · teddy</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Need More Info
-Conclusion: Need more info. Interesting technology angle but...</div>
-  
 </div>
 <div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
@@ -513,30 +265,6 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
   <div class="card-metrics"><span class="metric">👥 11,819</span></div>
   <div class="card-release">📅 2026</div>
-  
-  
-</div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
-    <span class="card-title">Away Team</span>
-  </div>
-  <div class="card-company">Klei Entertainment</div>
-  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag source-tag">Triple-i 2026</span></div>
-  <div class="card-metrics"><span class="metric">👥 13,554</span></div>
-  <div class="card-release">📅 To be announced</div>
-  
-  <div class="card-action">▶ Tencent ownecd</div>
-</div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
-    <span class="card-title">Alkahest</span>
-  </div>
-  <div class="card-company">Push On</div>
-  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag source-tag">Triple-i 2026</span></div>
-  <div class="card-metrics"><span class="metric">👥 52,037</span><span class="metric">📊 #42</span></div>
-  <div class="card-release">📅 To be announced</div>
   
   
 </div>
@@ -660,18 +388,6 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   <div class="card-action">▶ devolver owned</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
-    <span class="card-title">Sledding Game</span>
-  </div>
-  <div class="card-company">The Sledding Corporation</div>
-  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
-  <div class="card-metrics"><span class="metric">👥 32,594</span><span class="metric">📊 #82</span></div>
-  <div class="card-release">📅 Q2 2026</div>
-  
-  <div class="card-action">▶ JP contacted</div>
-</div>
 <div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
@@ -739,19 +455,6 @@ Strong financial perform...</div>
   
   <div class="card-verdict">GRC: Others
 Conclusion: Others. Not recommended for investment at this stage; ma...</div>
-  
-</div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
-  <div class="card-header">
-    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
-    <span class="card-title">Wind Rose</span>
-  </div>
-  <div class="card-company">Windrose Crew · ty</div>
-  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
-  
-  
-  <div class="card-verdict">GRC: Others
-</div>
   
 </div>
 <div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
@@ -866,12 +569,317 @@ Conclusion: N/A. Meeting cancelled.</div>
 </div>
 <div class="column " style="--col-bg:#E8F5E9;--col-border:#66BB6A" data-status="contacting">
   <div class="column-header" onclick="toggleColumn(this)">
-    <span class="column-title">🤝 接触中</span>
-    <span class="column-count">0</span>
+    <span class="column-title">🤝 已建联</span>
+    <span class="column-count">19</span>
     <span class="collapse-icon">▼</span>
   </div>
   <div class="column-body">
-    
+    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
+    <span class="card-title">Solarpunk</span>
+  </div>
+  <div class="card-company">Cyberwave · Teddy</div>
+  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
+  <div class="card-metrics"><span class="metric">👥 67,492</span><span class="metric">📊 #21</span></div>
+  <div class="card-release">📅 Jun 8, 2026</div>
+  <div class="card-verdict">目前愿望单排名最高，26年5月发售，确实可以看看新版本，但是目前时间太近，似乎做不了什么</div>
+  <div class="card-action">▶ JP contacted</div>
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🔴高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
+    <span class="card-title">Tilki</span>
+  </div>
+  <div class="card-company">TILKI · Teddy</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info, wait for playable
+Conclusion: Need more info. Will send Bet...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🔴高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
+    <span class="card-title">Chronicles Medieval</span>
+  </div>
+  <div class="card-company">Raw Power Games · Lisa</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info, wait for playable
+Conclusion: Need more info. Excellent con...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🔴高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
+    <span class="card-title">Haunted Paws</span>
+  </div>
+  <div class="card-company">SneakyBox (Lazy Clock) · Teddy</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info, wait for playable
+Conclusion: Need more info. Strong organi...</div>
+  
+</div>
+<div class="card" data-source="triple_i_2026" data-priority="🟡中高" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Valor Mortis</span>
+  </div>
+  <div class="card-company">One More Level · Areil</div>
+  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
+  <div class="card-metrics"><span class="metric">👥 24,649</span><span class="metric">📊 #75</span></div>
+  <div class="card-release">📅 2026</div>
+  <div class="card-verdict">第一人称魂like，愿望单top100等发售</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">One Shot Simon</span>
+  </div>
+  <div class="card-company">Edcorp · Teddy</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info, wait for playable
+Conclusion: Need more info. Wait for play...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Return to Moria 2</span>
+  </div>
+  <div class="card-company">North Beach · Justin</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Neutral, wait for playable
+Conclusion: Need more info. Focus on "Stranded D...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Stance</span>
+  </div>
+  <div class="card-company">Authorship Games · Justin</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Neutral, wait for playable
+Conclusion: Need more info. Wait for latest play...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">The Holdouts</span>
+  </div>
+  <div class="card-company">Ruckus · John Polson</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Need to participate in April pla...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Project Hex</span>
+  </div>
+  <div class="card-company">Lasting Light Studio · John Polson</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Worth tracking but not ready for...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Zero State Agent</span>
+  </div>
+  <div class="card-company">Fortress Games · John Polson</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Core gameplay and art style show...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Big Box</span>
+  </div>
+  <div class="card-company">Newtin · John Polson</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Tested on-site — felt mediocre.
+...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">cozy multiplayer</span>
+  </div>
+  <div class="card-company">Dragon Snacks · Justin</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Direction is challenging but tea...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Hello Kitty Island Adventure</span>
+  </div>
+  <div class="card-company">Sunblink · John Polson</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Low priority — only at PPT stage...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">The Hidden</span>
+  </div>
+  <div class="card-company">Cardboard Sword · Teddy</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Will provide a playable demo.
+
+T...</div>
+  
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Project World Model</span>
+  </div>
+  <div class="card-company">Alakazam · teddy</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Need More Info
+Conclusion: Need more info. Interesting technology angle but...</div>
+  
+</div>
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="contacting" data-tag-主动Pitch="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
+    <span class="card-title">Alkahest</span>
+  </div>
+  <div class="card-company">Push On</div>
+  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag source-tag">Triple-i 2026</span></div>
+  <div class="card-metrics"><span class="metric">👥 52,037</span><span class="metric">📊 #42</span></div>
+  <div class="card-release">📅 To be announced</div>
+  
+  
+</div>
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
+    <span class="card-title">Sledding Game</span>
+  </div>
+  <div class="card-company">The Sledding Corporation</div>
+  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
+  <div class="card-metrics"><span class="metric">👥 32,594</span><span class="metric">📊 #82</span></div>
+  <div class="card-release">📅 Q2 2026</div>
+  
+  <div class="card-action">▶ JP contacted</div>
+</div>
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="contacting" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
+    <span class="card-title">Wind Rose</span>
+  </div>
+  <div class="card-company">Windrose Crew · ty</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Others
+</div>
+  
+</div>
+  </div>
+</div>
+<div class="column " style="--col-bg:#FFF8E1;--col-border:#FFB300" data-status="small_refresh">
+  <div class="column-header" onclick="toggleColumn(this)">
+    <span class="column-title">🖊️小额刷新</span>
+    <span class="column-count">4</span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="column-body">
+    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="small_refresh" data-tag-主动Pitch="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
+    <span class="card-title">Don't Starve Elsewhere</span>
+  </div>
+  <div class="card-company">Klei Entertainment · Venturelab John Polson</div>
+  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag source-tag">Triple-i 2026</span></div>
+  <div class="card-metrics"><span class="metric">👥 19,080</span><span class="metric">📊 #171</span></div>
+  <div class="card-release">📅 To be announced</div>
+  <div class="card-verdict">饥荒新作</div>
+  <div class="card-action">▶ Tencent owed</div>
+</div>
+<div class="card" data-source="triple_i_2026" data-priority="🟡中高" data-status="small_refresh" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">SpaceCraft</span>
+  </div>
+  <div class="card-company">Shiro Games · Teddy</div>
+  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag" style="background:#FFEBEE;color:#C62828">即将上线2026</span><span class="tag source-tag">Triple-i 2026</span></div>
+  <div class="card-metrics"><span class="metric">👥 44,853</span><span class="metric">📊 #89</span></div>
+  <div class="card-release">📅 May 20, 2026</div>
+  <div class="card-verdict">太空基建+星系探索+开飞船，整体scope较大，我们小额</div>
+  <div class="card-action">▶ - investee?</div>
+</div>
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="small_refresh" data-tag-BD推荐="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
+    <span class="card-title">Control 2</span>
+  </div>
+  <div class="card-company">Remedy · Lisa</div>
+  <div class="card-tags"><span class="tag" style="background:#F3E5F5;color:#6A1B9A">BD推荐</span><span class="tag source-tag">GDC 2026</span></div>
+  
+  
+  <div class="card-verdict">GRC: Others
+Conclusion: Others. TGIF Review 
+
+The art direction carries forward ...</div>
+  
+</div>
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="small_refresh" data-tag-主动Pitch="1">
+  <div class="card-header">
+    <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
+    <span class="card-title">Away Team</span>
+  </div>
+  <div class="card-company">Klei Entertainment</div>
+  <div class="card-tags"><span class="tag" style="background:#E3F2FD;color:#1565C0">主动Pitch</span><span class="tag source-tag">Triple-i 2026</span></div>
+  <div class="card-metrics"><span class="metric">👥 13,554</span></div>
+  <div class="card-release">📅 To be announced</div>
+  
+  <div class="card-action">▶ Tencent ownecd</div>
+</div>
   </div>
 </div>
 <div class="column " style="--col-bg:#F3E5F5;--col-border:#AB47BC" data-status="deep_eval">

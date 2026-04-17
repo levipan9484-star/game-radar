@@ -29,10 +29,11 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
 
 /* Filters */
 .filters { padding:14px 32px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; background:var(--surface); border-bottom:1px solid var(--surface2); }
-.filter-btn { background:var(--surface2); color:var(--text2); border:1px solid transparent; padding:6px 14px; border-radius:16px; font-size:12px; cursor:pointer; transition:all .2s; }
+.filter-btn { background:var(--surface2); color:var(--text2); border:1px solid transparent; padding:6px 14px; border-radius:16px; font-size:12px; cursor:pointer; transition:all .2s; display:inline-flex; align-items:center; gap:4px; }
 .filter-btn:hover { color:var(--text); border-color:var(--accent); }
 .filter-btn.active { background:var(--accent); color:#000; font-weight:600; }
 .filter-sep { color:var(--surface2); margin:0 4px; }
+.filter-label { color:var(--text2); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-right:2px; }
 
 /* Board */
 .board { display:flex; gap:16px; padding:20px 24px; overflow-x:auto; align-items:flex-start; min-height:calc(100vh - 160px); }
@@ -88,11 +89,21 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
 </div>
 
 <div class="filters">
-  <button class="filter-btn active" onclick="filterTag('all',this)">全部</button>
+  <span class="filter-label">标签</span>
+  <button class="filter-btn active" data-group="tag" onclick="setFilter('tag','all',this)">全部</button>
+  <button class="filter-btn" data-group="tag" onclick="setFilter('tag','BD推荐',this)">BD推荐 (44)</button><button class="filter-btn" data-group="tag" onclick="setFilter('tag','BD重点',this)">BD重点 (16)</button><button class="filter-btn" data-group="tag" onclick="setFilter('tag','主动Pitch',this)">主动Pitch (40)</button><button class="filter-btn" data-group="tag" onclick="setFilter('tag','即将上线2026',this)">即将上线2026 (19)</button>
   <span class="filter-sep">|</span>
-  <button class="filter-btn" onclick="filterTag(&quot;BD推荐&quot;,this)">BD推荐 (44)</button><button class="filter-btn" onclick="filterTag(&quot;BD重点&quot;,this)">BD重点 (16)</button><button class="filter-btn" onclick="filterTag(&quot;主动Pitch&quot;,this)">主动Pitch (40)</button><button class="filter-btn" onclick="filterTag(&quot;即将上线2026&quot;,this)">即将上线2026 (19)</button>
+  <span class="filter-label">优先级</span>
+  <button class="filter-btn active" data-group="priority" onclick="setFilter('priority','all',this)">全部</button>
+  <button class="filter-btn" data-group="priority" onclick="setFilter('priority','🔴高',this)"><span class="fd" style="background:#EF5350;width:8px;height:8px;border-radius:50%;display:inline-block"></span> 高 (16)</button><button class="filter-btn" data-group="priority" onclick="setFilter('priority','🟡中高',this)"><span class="fd" style="background:#FFA726;width:8px;height:8px;border-radius:50%;display:inline-block"></span> 中高 (17)</button><button class="filter-btn" data-group="priority" onclick="setFilter('priority','⚪一般',this)"><span class="fd" style="background:#BDBDBD;width:8px;height:8px;border-radius:50%;display:inline-block"></span> 一般 (51)</button>
   <span class="filter-sep">|</span>
-  <button class="filter-btn" onclick="filterSource(&quot;triple_i_2026&quot;,this)">Triple-i 2026 (40)</button><button class="filter-btn" onclick="filterSource(&quot;gdc_2026&quot;,this)">GDC 2026 (44)</button>
+  <span class="filter-label">状态</span>
+  <button class="filter-btn active" data-group="status" onclick="setFilter('status','all',this)">全部</button>
+  <button class="filter-btn" data-group="status" onclick="setFilter('status','inbox',this)">📥 新发现 (0)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','watching',this)">👀 观察中 (55)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','contacting',this)">🤝 接触中 (7)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','deep_eval',this)">📋 深度评估 (0)</button><button class="filter-btn" data-group="status" onclick="setFilter('status','archived',this)">📦 归档 (22)</button>
+  <span class="filter-sep">|</span>
+  <span class="filter-label">来源</span>
+  <button class="filter-btn active" data-group="source" onclick="setFilter('source','all',this)">全部</button>
+  <button class="filter-btn" data-group="source" onclick="setFilter('source','triple_i_2026',this)">Triple-i 2026 (40)</button><button class="filter-btn" data-group="source" onclick="setFilter('source','gdc_2026',this)">GDC 2026 (44)</button>
 </div>
 
 <div class="board">
@@ -114,7 +125,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
     <span class="collapse-icon">▼</span>
   </div>
   <div class="column-body">
-    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Too Deep to Quit</span>
@@ -126,7 +137,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">四人合作friendslop</div>
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">SpaceCraft</span>
@@ -138,7 +149,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">太空基建+星系探索+开飞船，整体scope较大，我们小额</div>
   <div class="card-action">▶ - investee?</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Valor Mortis</span>
@@ -150,7 +161,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">第一人称魂like，愿望单top100等发售</div>
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Graveyard Keeper II</span>
@@ -162,7 +173,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Thick as Thieves</span>
@@ -174,7 +185,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">双人合作盗宝，potential in social drama</div>
   <div class="card-action">▶ - ex tencent investee</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Don't Starve Elsewhere</span>
@@ -186,7 +197,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">饥荒新作</div>
   <div class="card-action">▶ Tencent owed</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Crop</span>
@@ -198,7 +209,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">11bit新作，克苏鲁种田，非常值得关注</div>
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Machine Party</span>
@@ -210,7 +221,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
   <div class="card-verdict">恶魔轮盘制作人新作，4人合作派对游戏，有爆款品相</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Tilki</span>
@@ -223,7 +234,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-seri
 Conclusion: Need more info. Will send Bet...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Tungsten</span>
@@ -236,7 +247,7 @@ Conclusion: Need more info. Will send Bet...</div>
 Conclusion: Need more info. Product showe...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">One Shot Simon</span>
@@ -249,7 +260,7 @@ Conclusion: Need more info. Product showe...</div>
 Conclusion: Need more info. Wait for play...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Chronicles Medieval</span>
@@ -262,7 +273,7 @@ Conclusion: Need more info. Wait for play...</div>
 Conclusion: Need more info. Excellent con...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Haunted Paws</span>
@@ -275,7 +286,7 @@ Conclusion: Need more info. Excellent con...</div>
 Conclusion: Need more info. Strong organi...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Dead as Disco</span>
@@ -288,7 +299,7 @@ Conclusion: Need more info. Strong organi...</div>
 Conclusion: Need more info. Wait for May build b...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Return to Moria 2</span>
@@ -301,7 +312,7 @@ Conclusion: Need more info. Wait for May build b...</div>
 Conclusion: Need more info. Focus on "Stranded D...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Stance</span>
@@ -314,7 +325,7 @@ Conclusion: Need more info. Focus on "Stranded D...</div>
 Conclusion: Need more info. Wait for latest play...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">The Holdouts</span>
@@ -327,7 +338,7 @@ Conclusion: Need more info. Wait for latest play...</div>
 Conclusion: Need more info. Need to participate in April pla...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Project Hex</span>
@@ -340,7 +351,7 @@ Conclusion: Need more info. Need to participate in April pla...</div>
 Conclusion: Need more info. Worth tracking but not ready for...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Zero State Agent</span>
@@ -353,7 +364,7 @@ Conclusion: Need more info. Worth tracking but not ready for...</div>
 Conclusion: Need more info. Core gameplay and art style show...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Stranded Time</span>
@@ -366,7 +377,7 @@ Conclusion: Need more info. Core gameplay and art style show...</div>
 Conclusion: Need more info. Promising concept from a strong ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Big Box</span>
@@ -380,7 +391,7 @@ Conclusion: Need more info. Tested on-site — felt mediocre.
 ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">cozy multiplayer</span>
@@ -393,7 +404,7 @@ Conclusion: Need more info. Tested on-site — felt mediocre.
 Conclusion: Need more info. Direction is challenging but tea...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Hello Kitty Island Adventure</span>
@@ -406,7 +417,7 @@ Conclusion: Need more info. Direction is challenging but tea...</div>
 Conclusion: Need more info. Low priority — only at PPT stage...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">The Hidden</span>
@@ -421,7 +432,7 @@ Conclusion: Need more info. Will provide a playable demo.
 T...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="🟡中高" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#FFA726" title="🟡中高"></span>
     <span class="card-title">Project World Model</span>
@@ -434,7 +445,7 @@ T...</div>
 Conclusion: Need more info. Interesting technology angle but...</div>
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Romestead</span>
@@ -446,7 +457,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   <div class="card-verdict">战争星露谷，白天种菜晚上战斗</div>
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Warhammer Survivors</span>
@@ -458,7 +469,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Away Team</span>
@@ -470,7 +481,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   <div class="card-action">▶ Tencent ownecd</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Alkahest</span>
@@ -482,7 +493,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Frostrail</span>
@@ -494,7 +505,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Lost Railway</span>
@@ -506,7 +517,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Castlevania: Belmont's Curse</span>
@@ -518,7 +529,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Far Far West</span>
@@ -530,7 +541,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Alabaster Dawn</span>
@@ -542,7 +553,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">We Were Here Tomorrow</span>
@@ -554,7 +565,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">The Lift</span>
@@ -566,7 +577,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   <div class="card-verdict">第一人称科幻修电梯游戏</div>
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Temtem: Pioneers</span>
@@ -578,7 +589,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Long Gone</span>
@@ -590,7 +601,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   <div class="card-action">▶ point and click / puzzle. not of interest</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="watching" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">STARSEEKER: Astroneer Expeditions</span>
@@ -602,7 +613,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
   
   <div class="card-action">▶ devolver owned</div>
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Possession</span>
@@ -615,7 +626,7 @@ Conclusion: Need more info. Interesting technology angle but...</div>
 Conclusion: Others. Current funding round has closed; wait for next ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Misfiz</span>
@@ -630,7 +641,7 @@ Conclusion: Others — ongoing evaluation.
 Catch-up meeting format. T...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Triarchy</span>
@@ -643,7 +654,7 @@ Catch-up meeting format. T...</div>
 Conclusion: Others. Portfolio company catch-up. Wait for Playable de...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Dredge</span>
@@ -658,7 +669,7 @@ Conclusion: Industry information meeting only.
 Interesting incubati...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">[PikPok] 未命名项目</span>
@@ -673,7 +684,7 @@ Conclusion: Industry landscape discussion.
 Strong financial perform...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Dorian</span>
@@ -686,7 +697,7 @@ Strong financial perform...</div>
 Conclusion: Others. Not recommended for investment at this stage; ma...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Control 2</span>
@@ -701,7 +712,7 @@ Conclusion: Others. TGIF Review
 The art direction carries forward ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Wind Rose</span>
@@ -716,7 +727,7 @@ Conclusion: Others. China publishing rejected due to timeline.
 Stro...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">PKDX</span>
@@ -729,7 +740,7 @@ Stro...</div>
 Conclusion: Others. Not investable currently but worth long-term tra...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">[Soft Rains (Joel Burgess)] 未命名项目</span>
@@ -742,7 +753,7 @@ Conclusion: Others. Not investable currently but worth long-term tra...</div>
 Conclusion: N/A. Catch-up meeting — relationship maintenance with to...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">ShatterRush</span>
@@ -757,7 +768,7 @@ Conclusion: Likely No. Unique concept but significant execution risk.
 ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Without a Hitch.</span>
@@ -770,7 +781,7 @@ Conclusion: Likely No. Unique concept but significant execution risk.
 Conclusion: Likely No. Not recommended for investment or publishing at ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Belong</span>
@@ -785,7 +796,7 @@ Conclusion: Likely No. Not recommended at this stage.
 Team background ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Cronos x Black Myth</span>
@@ -798,7 +809,7 @@ Team background ...</div>
 Conclusion: Others. Detailed feedback will be provided after the pla...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">[Trangle] 未命名项目</span>
@@ -811,7 +822,7 @@ Conclusion: Others. Detailed feedback will be provided after the pla...</div>
 Conclusion: N/A. Meeting cancelled.</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="watching" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">[Plot Twist] 未命名项目</span>
@@ -833,7 +844,7 @@ Conclusion: N/A. Meeting cancelled.</div>
     <span class="collapse-icon">▼</span>
   </div>
   <div class="column-body">
-    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-BD重点="1">
+    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="contacting" data-tag-主动Pitch="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Prove You're Human</span>
@@ -845,7 +856,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   <div class="card-verdict">concept有创意，但是优先度较低</div>
   <div class="card-action">▶ JP contacted</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Over the Hill</span>
@@ -857,7 +868,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   <div class="card-action">▶ JP contacted in 2025</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Neverway</span>
@@ -869,7 +880,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   <div class="card-action">▶ JP contacted</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Shift at Midnight</span>
@@ -881,7 +892,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   <div class="card-verdict">即将上线的多人合作恐怖/寻找伪人+合作射击，竞品观察</div>
   <div class="card-action">▶ JP contacted</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Solarpunk</span>
@@ -893,7 +904,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   <div class="card-verdict">目前愿望单排名最高，26年5月发售，确实可以看看新版本，但是目前时间太近，似乎做不了什么</div>
   <div class="card-action">▶ JP contacted</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Dead as Disco</span>
@@ -905,7 +916,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   <div class="card-verdict">in contact</div>
   <div class="card-action">▶ Justin contacted</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="contacting" data-tag-主动Pitch="1" data-tag-即将上线2026="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Sledding Game</span>
@@ -936,7 +947,7 @@ Conclusion: N/A. Meeting cancelled.</div>
     <span class="collapse-icon">▶</span>
   </div>
   <div class="column-body">
-    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-BD重点="1">
+    <div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="archived" data-tag-主动Pitch="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Windrose</span>
@@ -948,7 +959,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-tag-主动Pitch="1" data-tag-BD重点="1">
+<div class="card" data-source="triple_i_2026" data-priority="🔴高" data-status="archived" data-tag-主动Pitch="1" data-tag-BD重点="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#EF5350" title="🔴高"></span>
     <span class="card-title">Super Battle Golf</span>
@@ -960,7 +971,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   <div class="card-verdict">已经上线了，卖了一百多万份，非常好的派对游戏，关注厂商潜力，马里奥赛车+高尔夫</div>
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Lost Castle 2</span>
@@ -972,7 +983,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Rift of the NecroDancer – Undertale Music Pack (DLC)</span>
@@ -984,7 +995,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   <div class="card-action">▶ - tencent investee</div>
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Barotrauma – Home & Harbor Expansion (DLC)</span>
@@ -996,7 +1007,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Cairn: On the Trail (DLC)</span>
@@ -1008,7 +1019,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">CloverPit – Unholy Fusion (DLC)</span>
@@ -1020,7 +1031,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Final Sentence</span>
@@ -1032,7 +1043,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Everwind – The First Ascent Update</span>
@@ -1044,7 +1055,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Brotato – Primal Dead (DLC)</span>
@@ -1056,7 +1067,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   
 </div>
-<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-tag-主动Pitch="1">
+<div class="card" data-source="triple_i_2026" data-priority="⚪一般" data-status="archived" data-tag-主动Pitch="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Risk of Rain 2 – Hallowed Concepts (DLC)</span>
@@ -1068,7 +1079,7 @@ Conclusion: N/A. Meeting cancelled.</div>
   
   <div class="card-action">▶ JP talks to Hopoo, Amir to 2K/Gearbox</div>
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Myth</span>
@@ -1081,7 +1092,7 @@ Conclusion: N/A. Meeting cancelled.</div>
 Conclusion: No. Overall gameplay experience is limited compared within m...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Project Fang</span>
@@ -1095,7 +1106,7 @@ Conclusion: Not recommended for investment or publishing at this stage.
 ...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Project Echo</span>
@@ -1108,7 +1119,7 @@ Conclusion: Not recommended for investment or publishing at this stage.
 Conclusion: No. Not recommended for investment or publishing at this sta...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Project Kaiju</span>
@@ -1121,7 +1132,7 @@ Conclusion: No. Not recommended for investment or publishing at this sta...</div
 Conclusion: No. Not recommended for investment or publishing at this sta...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Everstorm</span>
@@ -1136,7 +1147,7 @@ Conclusion: No. Not pursuing.
 Self-funded for 6 years by a small remote...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Golden Tides</span>
@@ -1149,7 +1160,7 @@ Self-funded for 6 years by a small remote...</div>
 Conclusion: No. Not recommended for investment or publishing at this sta...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">life and death</span>
@@ -1164,7 +1175,7 @@ Conclusion: No.Not recomment at this stage.
 Formed by ex-COD:Treyarch l...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Wacky</span>
@@ -1177,7 +1188,7 @@ Formed by ex-COD:Treyarch l...</div>
 Conclusion: No. Not recommended for investment or publishing at this sta...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Bobbin Brothers</span>
@@ -1192,7 +1203,7 @@ Conclusion: No. Not recommend at this stage.
 AI-generated card art comb...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">DCKO</span>
@@ -1207,7 +1218,7 @@ Conclusion: No. Not recomment on this stage.
 Essentially a Marvel Conte...</div>
   
 </div>
-<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-tag-BD推荐="1">
+<div class="card" data-source="gdc_2026" data-priority="⚪一般" data-status="archived" data-tag-BD推荐="1">
   <div class="card-header">
     <span class="pri-dot" style="background:#BDBDBD" title="⚪一般"></span>
     <span class="card-title">Shadow Play</span>
@@ -1230,39 +1241,33 @@ Conclusion: Likely No. Not recommended for investment at this sta...</div>
 </div>
 
 <script>
-let activeFilter = 'all';
-let activeFilterType = 'tag';
+const filters = { tag: 'all', priority: 'all', status: 'all', source: 'all' };
 
-function filterTag(tag, btn) {
-  activeFilter = tag;
-  activeFilterType = 'tag';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function setFilter(group, value, btn) {
+  filters[group] = value;
+  document.querySelectorAll(`.filter-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  applyFilter();
+  applyFilters();
 }
 
-function filterSource(src, btn) {
-  activeFilter = src;
-  activeFilterType = 'source';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  applyFilter();
-}
-
-function applyFilter() {
+function applyFilters() {
   document.querySelectorAll('.card').forEach(card => {
-    if (activeFilter === 'all') {
-      card.classList.remove('hidden');
-      return;
+    let visible = true;
+    if (filters.tag !== 'all') {
+      const attr = 'data-tag-' + filters.tag.replace(/ /g, '_');
+      if (!card.hasAttribute(attr)) visible = false;
     }
-    if (activeFilterType === 'tag') {
-      const attr = 'data-tag-' + activeFilter.replace(/ /g, '_');
-      card.classList.toggle('hidden', !card.hasAttribute(attr));
-    } else {
-      card.classList.toggle('hidden', card.dataset.source !== activeFilter);
+    if (filters.priority !== 'all') {
+      if (card.dataset.priority !== filters.priority) visible = false;
     }
+    if (filters.status !== 'all') {
+      if (card.dataset.status !== filters.status) visible = false;
+    }
+    if (filters.source !== 'all') {
+      if (card.dataset.source !== filters.source) visible = false;
+    }
+    card.classList.toggle('hidden', !visible);
   });
-  // Update column counts
   document.querySelectorAll('.column').forEach(col => {
     const visible = col.querySelectorAll('.card:not(.hidden)').length;
     col.querySelector('.column-count').textContent = visible;
